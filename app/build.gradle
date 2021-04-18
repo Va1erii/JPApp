@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -15,6 +17,12 @@ android {
         versionCode 1
         versionName "1.0"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -26,6 +34,9 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -45,13 +56,20 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$versions.retrofit"
     implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.adapter_rxjava2"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$versions.retrofit"
+
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    kapt "com.github.bumptech.glide:compiler:$versions.glide"
+
+    implementation "com.google.dagger:hilt-android:$versions.hilt"
+    kapt "com.google.dagger:hilt-compiler:$versions.hilt"
 
     implementation "com.squareup.moshi:moshi-kotlin:$versions.moshi"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
 
     implementation "androidx.room:room-runtime:$versions.room"
     implementation "androidx.room:room-ktx:$versions.room"
+    implementation "androidx.room:room-rxjava3:$versions.room"
     kapt "androidx.room:room-compiler:$versions.room"
 
     implementation "com.jakewharton.timber:timber:$versions.timber"

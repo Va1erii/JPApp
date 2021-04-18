@@ -1,7 +1,10 @@
 package com.vpopov.jpapp.network
 
-import retrofit2.Call
+import com.vpopov.jpapp.network.response.NPointResponse
+import io.reactivex.rxjava3.core.Single
+import retrofit2.http.GET
 
 interface NPointService {
-    fun fetchData()
+    @GET("a2b63ef226c08553b2f9")
+    fun fetchData(): Single<NPointResponse>
 }
