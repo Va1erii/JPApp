@@ -1,7 +1,6 @@
 package com.vpopov.jpapp.ui.details
 
 import android.os.Parcelable
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.vpopov.jpapp.repository.DetailsRepository
@@ -11,7 +10,6 @@ import kotlinx.parcelize.Parcelize
 
 
 class DetailsViewModel @AssistedInject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val detailsRepository: DetailsRepository,
     @Assisted private val item: Item
 ) {

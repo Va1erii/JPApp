@@ -21,5 +21,5 @@ class DetailsFragment : Fragment() {
         DetailsViewModel.provideFactory(detailsViewModelFactory, Item(name, itemType))
     }
 
-    
+
 }

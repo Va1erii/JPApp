@@ -11,9 +11,18 @@ class NPointClient @Inject constructor(
 ) {
     // RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io())
     @WorkerThread
-    fun fetchData(): Single<Pair<List<Food>, List<City>>> {
-        return nPointService.fetchData().map {
-            it.foods to it.cities
-        }
+    fun fetchData(): Single<Response> {
+        return nPointService.fetchData()
+            .map<Response> { Response.Success(it.foods, it.cities) }
+            .onErrorReturn { Response.Failure(it?.message ?: "Unknown error") }
+    }
+
+    sealed class Response {
+        data class Success(
+            val foods: List<Food>,
+            val cities: List<City>
+        ) : Response()
+
+        data class Failure(val error: String) : Response()
     }
 }

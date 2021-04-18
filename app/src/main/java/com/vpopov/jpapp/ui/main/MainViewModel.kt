@@ -1,35 +1,49 @@
 package com.vpopov.jpapp.ui.main
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.vpopov.jpapp.extension.addTo
 import com.vpopov.jpapp.model.City
 import com.vpopov.jpapp.model.Food
 import com.vpopov.jpapp.repository.MainRepository
+import com.vpopov.jpapp.repository.MainRepository.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val mainRepository: MainRepository
-) : ViewModel() {
+) : ViewModel(), LifecycleObserver {
     private val compositeDisposable = CompositeDisposable()
 
-    val cities: Observable<List<City>> = mainRepository.fetchCities().toObservable()
-    val foods: Observable<List<Food>> = mainRepository.fetchFoods().toObservable()
+    val foods: MutableLiveData<List<Food>> = MutableLiveData()
+    val cities: MutableLiveData<List<City>> = MutableLiveData()
+    val error: MutableLiveData<String> = MutableLiveData()
+    val loading: MutableLiveData<Boolean> = MutableLiveData(true)
 
-    val cit: MutableLiveData<List<City>> = MutableLiveData()
-
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
-        mainRepository.fetchCities().subscribe { cities, t2 ->
-            cit.value = cities
-        }.addTo(compositeDisposable)
+        if (foods.value == null) {
+            mainRepository.fetchFoods().subscribe { response ->
+                when (response) {
+                    is Response.Success -> foods.value = response.items
+                    is Response.Error -> error.value = response.message
+                }
+                loading.value = false
+            }.addTo(compositeDisposable)
+        }
+        if (cities.value == null) {
+            mainRepository.fetchCities().subscribe { response ->
+                when (response) {
+                    is Response.Success -> cities.value = response.items
+                    is Response.Error -> error.value = response.message
+                }
+                loading.value = false
+            }.addTo(compositeDisposable)
+        }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stop() {
         compositeDisposable.clear()
     }

@@ -16,53 +16,72 @@ class MainRepository @Inject constructor(
     private val cityDao: CityDao,
     private val foodDao: FoodDao
 ) {
-    // Fetch and cache data when a view model subscribes
-    private var data: Single<Pair<List<Food>, List<City>>> = nPointClient
+    // Fetch and cache data when a subscription occurs
+    private var clientResponse: Single<NPointClient.Response> = nPointClient
         .fetchData()
         .cache()
 
-    fun fetchFoods(): Single<List<Food>> {
+    fun fetchFoods(): Single<Response<List<Food>>> {
         // Check if foods are available in the database
         return foodDao.getFoods()
             .flatMap {
-                // If no data in the database. Fetch or get cached response and save
-                if (it.isEmpty()) persistFoods()
-                else Single.just(it)
-
+                if (it.isEmpty()) getFoodsFromAPI() // Fetch from the API
+                else Single.just(Response.Success(it))
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun fetchCities(): Single<List<City>> {
+    fun fetchCities(): Single<Response<List<City>>> {
         // Check if cities are available in the database
         return cityDao.getCities()
             .flatMap {
-                // If no data in the database. Fetch or get cached response and save
-                if (it.isEmpty()) persistCities()
-                else Single.just(it)
+                if (it.isEmpty()) getCitiesFromAPI() // Fetch from the API
+                else Single.just(Response.Success(it))
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun persistFoods(): Single<List<Food>> {
-        val foods = ArrayList<Food>()
-        return data.map { it.first }
-            .flatMapCompletable {
-                foodDao.insertFoods(it)
-                    .andThen(Completable.fromRunnable { foods.addAll(it) })
+    private fun getFoodsFromAPI(): Single<Response<List<Food>>> {
+        val foods: ArrayList<Food> = ArrayList()
+        return clientResponse.flatMap {
+            when (it) {
+                // If success, save data to the database
+                is NPointClient.Response.Success -> Completable
+                    .fromRunnable { foods.addAll(it.foods) }
+                    .andThen(foodDao.insertFoods(foods))
+                    .andThen(Single.just(Response.Success(foods)))
+
+                // Return API error
+                is NPointClient.Response.Failure -> Single.just(Response.Error(it.error))
             }
-            .andThen(Single.just(foods))
+        }
     }
 
-    private fun persistCities(): Single<List<City>> {
-        val cities = ArrayList<City>()
-        return data.map { it.second }
-            .flatMapCompletable {
-                cityDao.insertCities(it)
-                    .andThen(Completable.fromRunnable { cities.addAll(it) })
+    private fun getCitiesFromAPI(): Single<Response<List<City>>> {
+        val cities: ArrayList<City> = ArrayList()
+        return clientResponse.flatMap {
+            when (it) {
+                // If success, save data to the database
+                is NPointClient.Response.Success -> Completable
+                    .fromRunnable { cities.addAll(it.cities) }
+                    .andThen(cityDao.insertCities(cities))
+                    .andThen(Single.just(Response.Success(cities)))
+
+                // Return API error
+                is NPointClient.Response.Failure -> Single.just(Response.Error(it.error))
             }
-            .andThen(Single.just(cities))
+        }
+    }
+
+    sealed class Response<T> {
+        data class Success<T>(
+            val items: T
+        ) : Response<T>()
+
+        data class Error<T>(
+            val message: String
+        ) : Response<T>()
     }
 }
