@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    app:startDestination="@id/main_fragment">
+
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="com.vpopov.jpapp.ui.main.Hilt_MainFragment">
+
+        <action
+            android:id="@+id/open_city_details"
+            app:destination="@id/city_details_fragment" />
+
+        <action
+            android:id="@+id/open_food_details"
+            app:destination="@id/food_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/city_details_fragment"
+        android:name="com.vpopov.jpapp.ui.details.city.CityDetailsFragment">
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/food_details_fragment"
+        android:name="com.vpopov.jpapp.ui.details.food.FoodDetailsFragment">
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+</navigation>

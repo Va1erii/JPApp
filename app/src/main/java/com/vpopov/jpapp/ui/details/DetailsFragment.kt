@@ -2,24 +2,34 @@ package com.vpopov.jpapp.ui.details
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.vpopov.jpapp.repository.DetailsRepository
+import com.vpopov.jpapp.ui.details.city.CityDetailsViewModel
+import com.vpopov.jpapp.ui.details.food.FoodDetailsViewModel
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class DetailsFragment : Fragment() {
-    companion object {
-        const val EXTRA_ITEM = "EXTRA_ITEM"
-        const val EXTRA_TYPE = "EXTRA_TYPE"
-    }
-
+abstract class DetailsFragment<T> : Fragment() {
     @Inject
-    lateinit var detailsViewModelFactory: DetailsViewModel.AssistedFactory
+    lateinit var detailsRepository: DetailsRepository
 
-    private val viewModel: DetailsViewModel by viewModels {
-        val itemType: ItemType = requireArguments().getParcelable(EXTRA_TYPE)!!
-        val name: String = requireArguments().getString(EXTRA_ITEM)!!
-        DetailsViewModel.provideFactory(detailsViewModelFactory, Item(name, itemType))
-    }
-
-
+    @Suppress("UNCHECKED_CAST")
+    protected inline fun <reified VM : DetailsViewModel<T>> provideViewModel(name: String) =
+        viewModels<VM> {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                    return when (modelClass.name) {
+                        CityDetailsViewModel::class.java.name -> CityDetailsViewModel(
+                            detailsRepository,
+                            name
+                        )
+                        FoodDetailsViewModel::class.java.name -> FoodDetailsViewModel(
+                            detailsRepository,
+                            name
+                        )
+                        else -> throw IllegalArgumentException("Unknown view model")
+                    } as T
+                }
+            }
+        }
 }
