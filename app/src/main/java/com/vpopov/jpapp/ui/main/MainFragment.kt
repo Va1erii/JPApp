@@ -31,5 +31,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }
         viewModel.error.observe(viewLifecycleOwner) {
         }
+
     }
 }

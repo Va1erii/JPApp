@@ -8,7 +8,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CityDetailsFragment : DetailsFragment<City>() {
-    private val viewModel: CityDetailsViewModel by provideViewModel("")
+    private val viewModel: CityDetailsViewModel by provideViewModel(
+        CityDetailsFragmentArgs.fromBundle(requireArguments()).name
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
