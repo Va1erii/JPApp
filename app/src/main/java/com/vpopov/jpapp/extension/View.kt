@@ -2,6 +2,10 @@ package com.vpopov.jpapp.extension
 
 import android.view.View
 
-fun View.visibleIf(visible: Boolean) {
-    this.visibility = if (visible) View.VISIBLE else View.GONE
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
 }

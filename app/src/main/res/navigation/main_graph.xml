@@ -11,8 +11,8 @@
         <action
             android:id="@+id/open_city_details"
             app:destination="@id/city_details_fragment"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popExitAnim="@anim/fragment_fade_exit">
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit">
             <argument
                 android:name="name"
                 app:argType="string" />
@@ -21,8 +21,8 @@
         <action
             android:id="@+id/open_food_details"
             app:destination="@id/food_details_fragment"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popExitAnim="@anim/fragment_fade_exit">
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit">
             <argument
                 android:name="name"
                 app:argType="string" />

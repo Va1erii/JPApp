@@ -10,7 +10,7 @@ import com.vpopov.jpapp.databinding.FoodItemViewBinding
 import com.vpopov.jpapp.model.Food
 
 class FoodAdapter(
-    private val onItemClicked: (Food, sharedView: View) -> Unit
+    private val onItemClicked: (Food) -> Unit
 ) : RecyclerView.Adapter<FoodAdapter.FoodVH>() {
     private val data: ArrayList<Food> = ArrayList()
 
@@ -22,7 +22,7 @@ class FoodAdapter(
 
     override fun onBindViewHolder(holder: FoodVH, position: Int) {
         holder.bind(data[position])
-        holder.itemView.setOnClickListener { onItemClicked(data[position], holder.sharedView) }
+        holder.itemView.setOnClickListener { onItemClicked(data[position]) }
     }
 
     override fun getItemCount(): Int = data.size
@@ -35,10 +35,8 @@ class FoodAdapter(
 
     class FoodVH(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = FoodItemViewBinding.bind(view)
-        val sharedView: View = binding.image
 
         fun bind(food: Food) {
-            sharedView.transitionName = food.name
             Glide.with(itemView)
                 .load(food.image)
                 .into(binding.image)

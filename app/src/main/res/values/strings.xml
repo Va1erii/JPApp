@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">JPApp</string>
+    <string name="cities_header">Main Cities in Japan</string>
+    <string name="foods_header">Most Popular Japanese Food</string>
 </resources>
