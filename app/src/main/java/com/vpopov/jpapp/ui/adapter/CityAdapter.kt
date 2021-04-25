@@ -10,7 +10,7 @@ import com.vpopov.jpapp.databinding.CityItemViewBinding
 import com.vpopov.jpapp.model.City
 
 class CityAdapter(
-    private val onItemClicked: (City) -> Unit
+    private val onItemClicked: (item: City, sharedView: View) -> Unit
 ) : RecyclerView.Adapter<CityAdapter.CityVH>() {
     private val data: ArrayList<City> = ArrayList()
 
@@ -22,7 +22,9 @@ class CityAdapter(
 
     override fun onBindViewHolder(holder: CityVH, position: Int) {
         holder.bind(data[position])
-        holder.itemView.setOnClickListener { onItemClicked(data[position]) }
+        holder.itemView.setOnClickListener {
+            onItemClicked(data[position], holder.sharedView)
+        }
     }
 
     override fun getItemCount(): Int = data.size
@@ -35,8 +37,10 @@ class CityAdapter(
 
     class CityVH(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = CityItemViewBinding.bind(view)
+        val sharedView: View = binding.image
 
         fun bind(city: City) {
+            sharedView.transitionName = city.image
             Glide.with(itemView)
                 .load(city.image)
                 .into(binding.image)

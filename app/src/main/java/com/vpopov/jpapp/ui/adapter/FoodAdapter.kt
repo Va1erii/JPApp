@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vpopov.jpapp.R
-import com.vpopov.jpapp.databinding.CityItemViewBinding
+import com.vpopov.jpapp.databinding.FoodItemViewBinding
 import com.vpopov.jpapp.model.Food
 
 class FoodAdapter(
@@ -16,7 +16,7 @@ class FoodAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodVH {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.city_item_view, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.food_item_view, parent, false)
         return FoodVH(view)
     }
 
@@ -34,7 +34,7 @@ class FoodAdapter(
     }
 
     class FoodVH(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = CityItemViewBinding.bind(view)
+        private val binding = FoodItemViewBinding.bind(view)
         val sharedView: View = binding.image
 
         fun bind(food: Food) {

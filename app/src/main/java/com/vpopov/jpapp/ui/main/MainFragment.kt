@@ -24,8 +24,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = MainFragmentBinding.bind(view)
-        val cityAdapter = CityAdapter {
-            findNavController().navigate(MainFragmentDirections.openCityDetails(it.name))
+        val cityAdapter = CityAdapter { city, sharedView ->
+            findNavController().navigate(
+                MainFragmentDirections.openCityDetails(city.name),
+                FragmentNavigatorExtras(sharedElements = arrayOf(sharedView to city.image))
+            )
         }
         val foodAdapter = FoodAdapter { food, sharedView ->
             findNavController().navigate(
@@ -51,7 +54,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         val foodsSkeleton = prepareSkeletonLoading(
             binding.foods,
             foodAdapter,
-            R.layout.skeletong_city_item_view
+            R.layout.skeleton_food_item_view
         )
         lifecycle.addObserver(viewModel)
         viewModel.foods.observe(viewLifecycleOwner) {
@@ -74,7 +77,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         return Skeleton.bind(recyclerView)
             .adapter(adapter)
             .angle(20)
-            .count(5)
+            .count(3)
             .color(R.color.white)
             .shimmer(true)
             .load(skeletonItemRes)
