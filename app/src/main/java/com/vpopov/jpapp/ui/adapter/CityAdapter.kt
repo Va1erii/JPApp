@@ -9,7 +9,9 @@ import com.vpopov.jpapp.R
 import com.vpopov.jpapp.databinding.CityItemViewBinding
 import com.vpopov.jpapp.model.City
 
-class CityAdapter : RecyclerView.Adapter<CityAdapter.CityVH>() {
+class CityAdapter(
+    private val onItemClicked: (City) -> Unit
+) : RecyclerView.Adapter<CityAdapter.CityVH>() {
     private val data: ArrayList<City> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityVH {
@@ -20,6 +22,7 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityVH>() {
 
     override fun onBindViewHolder(holder: CityVH, position: Int) {
         holder.bind(data[position])
+        holder.itemView.setOnClickListener { onItemClicked(data[position]) }
     }
 
     override fun getItemCount(): Int = data.size

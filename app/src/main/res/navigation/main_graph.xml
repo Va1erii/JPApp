@@ -6,20 +6,32 @@
 
     <fragment
         android:id="@+id/main_fragment"
-        android:name="com.vpopov.jpapp.ui.main.Hilt_MainFragment">
+        android:name="com.vpopov.jpapp.ui.main.MainFragment">
 
         <action
             android:id="@+id/open_city_details"
-            app:destination="@id/city_details_fragment" />
+            app:destination="@id/city_details_fragment"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popExitAnim="@anim/fragment_fade_exit">
+            <argument
+                android:name="name"
+                app:argType="string" />
+        </action>
 
         <action
             android:id="@+id/open_food_details"
-            app:destination="@id/food_details_fragment" />
+            app:destination="@id/food_details_fragment"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popExitAnim="@anim/fragment_fade_exit">
+            <argument
+                android:name="name"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/city_details_fragment"
-        android:name="com.vpopov.jpapp.ui.details.city.CityDetailsFragment">
+        android:name="com.vpopov.jpapp.ui.details.city.CityFragment">
         <argument
             android:name="name"
             app:argType="string" />
@@ -27,7 +39,7 @@
 
     <fragment
         android:id="@+id/food_details_fragment"
-        android:name="com.vpopov.jpapp.ui.details.food.FoodDetailsFragment">
+        android:name="com.vpopov.jpapp.ui.details.food.FoodFragment">
         <argument
             android:name="name"
             app:argType="string" />

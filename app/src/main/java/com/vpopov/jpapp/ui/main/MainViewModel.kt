@@ -19,7 +19,6 @@ class MainViewModel @Inject constructor(
     val foods: MutableLiveData<List<Food>> = MutableLiveData()
     val cities: MutableLiveData<List<City>> = MutableLiveData()
     val error: MutableLiveData<String> = MutableLiveData()
-    val loading: MutableLiveData<Boolean> = MutableLiveData(true)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
@@ -29,7 +28,6 @@ class MainViewModel @Inject constructor(
                     is Response.Success -> foods.value = response.items
                     is Response.Error -> error.value = response.message
                 }
-                loading.value = false
             }.addTo(compositeDisposable)
         }
         if (cities.value == null) {
@@ -38,7 +36,6 @@ class MainViewModel @Inject constructor(
                     is Response.Success -> cities.value = response.items
                     is Response.Error -> error.value = response.message
                 }
-                loading.value = false
             }.addTo(compositeDisposable)
         }
     }
