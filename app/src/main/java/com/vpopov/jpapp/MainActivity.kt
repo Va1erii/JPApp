@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), HasToolbar {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
             .let { it as NavHostFragment }
             .let { navController = it.navController }

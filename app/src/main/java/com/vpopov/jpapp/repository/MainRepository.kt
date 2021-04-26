@@ -5,6 +5,7 @@ import com.vpopov.jpapp.model.Food
 import com.vpopov.jpapp.network.NPointClient
 import com.vpopov.jpapp.persistence.CityDao
 import com.vpopov.jpapp.persistence.FoodDao
+import com.vpopov.jpapp.util.CharSequenceContainer
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -12,7 +13,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
-    nPointClient: NPointClient,
+    private val nPointClient: NPointClient,
     private val cityDao: CityDao,
     private val foodDao: FoodDao
 ) {
@@ -41,6 +42,13 @@ class MainRepository @Inject constructor(
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    // Invalidate cache
+    fun reset() {
+        clientResponse = nPointClient
+            .fetchData()
+            .cache()
     }
 
     private fun getFoodsFromAPI(): Single<Response<List<Food>>> {
@@ -81,7 +89,7 @@ class MainRepository @Inject constructor(
         ) : Response<T>()
 
         data class Error<T>(
-            val message: String
+            val message: CharSequenceContainer
         ) : Response<T>()
     }
 }

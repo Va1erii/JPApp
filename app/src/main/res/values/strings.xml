@@ -3,4 +3,6 @@
     <string name="cities_header">Main Cities in Japan</string>
     <string name="foods_header">Most Popular Japanese Food</string>
     <string name="retry_button">Retry</string>
+    <string name="api_response_error">Opps! Something went wrong. Check your connection</string>
+    <string name="enable_api_error">Enable API Error</string>
 </resources>

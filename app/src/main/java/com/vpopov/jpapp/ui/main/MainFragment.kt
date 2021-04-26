@@ -11,7 +11,9 @@ import com.ethanhua.skeleton.Skeleton
 import com.ethanhua.skeleton.SkeletonScreen
 import com.vpopov.jpapp.R
 import com.vpopov.jpapp.databinding.MainFragmentBinding
+import com.vpopov.jpapp.extension.gone
 import com.vpopov.jpapp.extension.setToolbarConfiguration
+import com.vpopov.jpapp.extension.visible
 import com.vpopov.jpapp.ui.adapter.CityAdapter
 import com.vpopov.jpapp.ui.adapter.FoodAdapter
 import com.vpopov.jpapp.ui.adapter.decoration.VerticalMarginDecoration
@@ -62,6 +64,17 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             cityAdapter.update(it)
         }
         viewModel.error.observe(viewLifecycleOwner) {
+            if (it.get(requireContext()).isEmpty()) {
+                binding.errorState.errorState.gone()
+                binding.content.visible()
+            } else {
+                binding.errorState.errorState.visible()
+                binding.content.gone()
+                binding.errorState.errorMessage.text = it.get(requireContext())
+            }
+        }
+        binding.errorState.retry.setOnClickListener {
+            viewModel.retry()
         }
     }
 
