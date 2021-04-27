@@ -6,18 +6,21 @@ import com.vpopov.jpapp.model.City
 import com.vpopov.jpapp.model.Food
 import com.vpopov.jpapp.util.CharSequenceContainer
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NPointClient @Inject constructor(
-    private val nPointService: NPointService
+    private val nPointService: NPointService,
+    private val timeout: Long = 8000
 ) {
-    // RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io())
+
     @WorkerThread
     fun fetchData(): Single<Response> {
         return nPointService.fetchData()
+            .subscribeOn(Schedulers.io())
             .map<Response> { Response.Success(it.foods, it.cities) }
-            .timeout(8, TimeUnit.SECONDS)
+            .timeout(timeout, TimeUnit.MILLISECONDS)
             .onErrorReturn { throwable ->
                 // Here we could provide API error code if it supported
                 Response.Failure(CharSequenceContainer(R.string.api_response_error))

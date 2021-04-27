@@ -59,8 +59,8 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$versions.retrofit"
 
-    implementation 'com.ethanhua:skeleton:1.1.2'
-    implementation 'io.supercharge:shimmerlayout:2.1.0'
+    implementation "com.ethanhua:skeleton:$versions.skeleton"
+    implementation "io.supercharge:shimmerlayout:$versions.shimmerlayout"
 
     implementation "com.github.bumptech.glide:glide:$versions.glide"
     kapt "com.github.bumptech.glide:compiler:$versions.glide"
@@ -89,5 +89,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$versions.viewmodel_savedstate"
 
     testImplementation "junit:junit:$versions.junit"
-    testImplementation "org.mockito:mockito-core:$versions.mockito_core"
+    testImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation "org.mockito:mockito-inline:$versions.mockito"
 }

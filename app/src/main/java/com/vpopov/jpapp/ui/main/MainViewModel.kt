@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
     val error: MutableLiveData<CharSequenceContainer> = MutableLiveData(CharSequenceContainer(""))
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun start() {
+    fun onStart() {
         if (foods.value == null) {
             fetchFoods()
         }
@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun stop() {
+    fun onStop() {
         compositeDisposable.clear()
     }
 

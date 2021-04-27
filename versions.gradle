@@ -38,11 +38,15 @@ versions.glide = "4.12.0"
 // Mochi
 versions.moshi = "1.11.0"
 
+// Skeleton
+versions.skeleton = "1.1.2"
+versions.shimmerlayout = "2.1.0"
+
 // Logging
 versions.timber = "4.7.1"
 
 // Test
 versions.junit = "4.13.2"
-versions.mockito_core = "3.5.13"
+versions.mockito = "3.5.13"
 
 ext.versions = versions

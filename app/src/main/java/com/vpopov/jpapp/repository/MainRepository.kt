@@ -18,9 +18,7 @@ class MainRepository @Inject constructor(
     private val foodDao: FoodDao
 ) {
     // Fetch and cache data when a subscription occurs
-    private var clientResponse: Single<NPointClient.Response> = nPointClient
-        .fetchData()
-        .cache()
+    private var cashe: Single<NPointClient.Response>? = null
 
     fun fetchFoods(): Single<Response<List<Food>>> {
         // Check if foods are available in the database
@@ -46,14 +44,14 @@ class MainRepository @Inject constructor(
 
     // Invalidate cache
     fun reset() {
-        clientResponse = nPointClient
+        cashe = nPointClient
             .fetchData()
             .cache()
     }
 
     private fun getFoodsFromAPI(): Single<Response<List<Food>>> {
         val foods: ArrayList<Food> = ArrayList()
-        return clientResponse.flatMap {
+        return getCache().flatMap {
             when (it) {
                 // If success, save data to the database
                 is NPointClient.Response.Success -> Completable
@@ -69,7 +67,7 @@ class MainRepository @Inject constructor(
 
     private fun getCitiesFromAPI(): Single<Response<List<City>>> {
         val cities: ArrayList<City> = ArrayList()
-        return clientResponse.flatMap {
+        return getCache().flatMap {
             when (it) {
                 // If success, save data to the database
                 is NPointClient.Response.Success -> Completable
@@ -81,6 +79,13 @@ class MainRepository @Inject constructor(
                 is NPointClient.Response.Failure -> Single.just(Response.Error(it.error))
             }
         }
+    }
+
+    private fun getCache(): Single<NPointClient.Response> {
+        return cashe ?: nPointClient
+            .fetchData()
+            .cache()
+            .apply { cashe = this }
     }
 
     sealed class Response<T> {
